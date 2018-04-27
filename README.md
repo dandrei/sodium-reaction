@@ -1,11 +1,15 @@
 ##### Overview
 This project is aimed at making graforlock's [sodium-typescript-examples](https://github.com/graforlock/sodium-typescript-examples) work in React.  
 
-It was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app), and all work done in TypeScript was transpiled automatically to JS. All the standard CRA scripts work as expected.
+It was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app), and all work done in TypeScript was transpiled automatically to JS.
 
-No automated transpilation support is included in the initial release, but if you use an IDE that does this out of the box (like WebStorm), you should be able to play with the examples directly.
+To install: clone the repo then run either `npm install` or `yarn install`.
+
+To run: all the standard CRA scripts work as expected. I just use `yarn start`.
 
 Only the first 2 examples are available so far, but these are useful in getting a feel what FRP is all about. I plan to add the third example as well, but that will require a severe departure from how things are done in the original repo.
+
+No automated transpilation support is included in the initial release, but if you use an IDE that does this out of the box (like WebStorm), you should be able to play with the examples directly.
 
 ##### Methodology
 
