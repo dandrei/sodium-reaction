@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "noImplicitUseStrict": true,
+    "jsx": "preserve"
+  }
+}
