@@ -2,7 +2,7 @@ import * as React from 'react';
 import {ChangeEvent} from "react";
 import {Cell, StreamSink, Unit} from "sodiumjs";
 
-import {pair} from './SodiumReaction';
+import {pair} from './sodium-reaction';
 
 
 export default class RExample2 extends React.Component {

@@ -10,7 +10,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 exports.__esModule = true;
 var React = require("react");
-var SodiumReaction_1 = require("./SodiumReaction");
+var sodium_reaction_1 = require("./sodium-reaction");
 var RExample2 = /** @class */ (function (_super) {
     __extends(RExample2, _super);
     function RExample2(props) {
@@ -25,8 +25,8 @@ var RExample2 = /** @class */ (function (_super) {
         var setText = function (text) {
             _this.setState({ currentValue: text });
         };
-        var _a = SodiumReaction_1.pair("0"), funcA = _a[0], cellA = _a[1];
-        var _b = SodiumReaction_1.pair("0"), funcB = _b[0], cellB = _b[1];
+        var _a = sodium_reaction_1.pair("0"), funcA = _a[0], cellA = _a[1];
+        var _b = sodium_reaction_1.pair("0"), funcB = _b[0], cellB = _b[1];
         var validate = function (cell) {
             return cell.map(function (s) {
                 var res = parseInt(s, 10);
