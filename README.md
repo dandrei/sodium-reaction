@@ -1,4 +1,4 @@
-#####Overview
+##### Overview
 This project is aimed at making graforlock's [sodium-typescript-examples](https://github.com/graforlock/sodium-typescript-examples) work in React.  
 
 It was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app), and all work done in TypeScript was transpiled automatically to JS. All the standard CRA scripts work as expected.
@@ -7,13 +7,13 @@ No automated transpilation support is included in the initial release, but if yo
 
 Only the first 2 examples are available so far, but these are useful in getting a feel what FRP is all about. I plan to add the third example as well, but that will require a severe departure from how things are done in the original repo.
 
-#####Methodology
+##### Methodology
 
 In order to integrate the examples in React, I had to strip away all GUI code, and separated the FRP code in `componentDidMount`. I think this is a much cleaner way of doing things.
 
 The FRP code only interacts with React on input and output, and the core code adheres to functional principles.
 
-#####Files
+##### Files
 
 `SExample1.tsx` is the first example with minimal changes done to the FRP code as written by graforlock.
 
@@ -25,7 +25,7 @@ The FRP code only interacts with React on input and output, and the core code ad
 
 This way, the contact point between Sodium and React has a minimal footprint. 
 
-#####Background
+##### Background
 - [Functional Reactive Programming ](https://www.manning.com/books/functional-reactive-programming) (the book, published by Manning)
 - [sodium-typescript](https://github.com/SodiumFRP/sodium-typescript) (the TypeScript library written by the authors)
 
