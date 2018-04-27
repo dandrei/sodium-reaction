@@ -7,11 +7,10 @@ import {pair} from './sodium-reaction';
 
 export default class RExample2 extends React.Component {
 
-    upClick: StreamSink<Unit>;
-    dnClick: StreamSink<Unit>;
     state = {
         currentValue: ''
     };
+
     private onChangeA: (event: ChangeEvent<HTMLInputElement>) => void;
     private onChangeB: (event: ChangeEvent<HTMLInputElement>) => void;
 
