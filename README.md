@@ -73,8 +73,9 @@ export default (props) => (
     </Provider>
 );
 ```
+Notice that the component has no logic, and it just binds events and displays state.
 
-#### Provider
+### Provider
 ```
 export default function () {
     const value$ = new StreamSink<number>();
@@ -104,8 +105,7 @@ With React & FRP, state changes are also abstracted away.
 ## Code sample #2
 The second example is slightly more complicated. There are two input boxes where you type numbers. The sum between these numbers is displayed below. I stripped the includes so as not to take too much space.
 
-#### Consumer
-Notice that the component has no logic, and it just binds events and displays state.
+### Consumer
 ```
 export default (props) => (
     <Provider>
@@ -122,7 +122,7 @@ export default (props) => (
 );
 ```
 
-#### Provider
+### Provider
 ```
 export default function () {
 
