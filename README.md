@@ -18,7 +18,7 @@ If you are't familiar with FRP, the [textbook definition](https://manning-conten
 
 If that sounds confusing, just think about an Excel spreadsheet. You simply declare the relationship between the cells, and never worry about what happens behind the scenes.
 
-In the `SodiumFRP` TypeScript library, there are two important concepts, streams and cells. Cells hold values, streams propagate events. Cells react to changes in other cells. As a convention, stream variable names are terminated in `$`.
+In the `SodiumFRP` TypeScript library, there are two important concepts, streams and cells. Cells hold values, streams propagate events. Cells react to changes in other cells.
 
 How do we use these here?
 
