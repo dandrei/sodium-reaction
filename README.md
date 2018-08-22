@@ -2,7 +2,7 @@
 
 Originally, this project was aimed at simply getting graforlock's [sodium-typescript-examples](https://github.com/graforlock/sodium-typescript-examples) to work React, as I was reading the FRP ([Functional Reactive Programming](https://www.manning.com/books/functional-reactive-programming)) book at the time.
 
-I adapted the first two examples. All the FRP code was executed inside `componentDidMount`. It worked, but mixing React and Sodium code inside a simple component looked clumsy and it wasn't at all clear why anyone should go to the trouble of using FRP.
+I adapted the first two examples. All the FRP code was executed inside `componentDidMount`. It worked, but mixing React and Sodium code inside a simple component looked clumsy and it wasn't at all clear why anyone should go to the trouble of using them together.
 
 After the initial commit, I slept on it for a few months while working on other projects, and decided there's a better way. Inspired by Merrick Christensen's [Headless User Interface Components](https://twitter.com/iammerrick/status/1011280034626134016), I decided to separate the UI from the data, and to create a standardized way for React to talk to Sodium. I also simplified the code in order to demonstrate the advantages of using Sodium with React.
 
