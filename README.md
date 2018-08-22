@@ -57,6 +57,8 @@ There's hardly any boilerplate involved. You simply:
 ## Code sample #1
 The first example consists of a `+` and a `-` button which increment and decrement a value, respectively.
 
+I stripped the includes so as not to take too much space.
+
 ### Consumer
 ```
 export default (props) => (
@@ -105,7 +107,7 @@ With React, the UI changes are abstracted away, you only need to manually handle
 With React & FRP, state changes are also abstracted away.
 
 ## Code sample #2
-The second example is slightly more complicated. There are two input boxes where you type numbers. The sum between these numbers is displayed below. I stripped the includes so as not to take too much space.
+The second example is slightly more complicated. There are two input boxes where you type numbers. The sum between these numbers is displayed under the boxes.
 
 ### Consumer
 ```
