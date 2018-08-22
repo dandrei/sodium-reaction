@@ -1,7 +1,8 @@
 import * as React from 'react';
 import {Fragment} from 'react';
-import dataSource from './FRP1'
 // import Provider from './Classic1'
+
+import dataSource from './FRP1'
 
 const Provider = dataSource();
 
