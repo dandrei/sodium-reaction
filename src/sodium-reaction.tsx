@@ -3,10 +3,10 @@ import {Component} from "react";
 import * as React from "react";
 
 
-function bindState(component: Component, object: Object) {
+function bindState(component: Component, stateDefinition: Object) {
     let state = {};
-    for (const key in object) {
-        const cell = object[key];
+    for (const key in stateDefinition) {
+        const cell = stateDefinition[key];
         bindValue(cell, v => component.setState({[key]: v}));
         state = {...state, ...{[key]: cell.sample()}};
     }
@@ -24,13 +24,12 @@ class SodiumReaction extends React.Component<any, any> {
 
     constructor(props) {
         super(props);
-        this.state = bindState(this, this.props.state);
+        this.state = bindState(this, this.props.stateDefinition);
     }
 
     render() {
         // @ts-ignore
-        return this.props.children(
-            {
+        return this.props.children({
                 ...this.props,
                 state: this.state
             }
@@ -38,6 +37,7 @@ class SodiumReaction extends React.Component<any, any> {
     }
 }
 
-export function sodiumReaction(props, state) {
-    return (_props) => (<SodiumReaction {...props} state={state}>{_props.children}</SodiumReaction>);
+export function sodiumReaction(props, stateDefinition) {
+    return (_props) => (
+        <SodiumReaction {...props} stateDefinition={stateDefinition}>{_props.children}</SodiumReaction>);
 }

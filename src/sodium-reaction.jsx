@@ -25,18 +25,18 @@ var __assign = (this && this.__assign) || function () {
 exports.__esModule = true;
 var sodiumjs_1 = require("sodiumjs");
 var React = require("react");
-function bindState(component, object) {
+function bindState(component, stateDefinition) {
     var state = {};
     var _loop_1 = function (key) {
         var _a;
-        var cell = object[key];
+        var cell = stateDefinition[key];
         bindValue(cell, function (v) {
             var _a;
             return component.setState((_a = {}, _a[key] = v, _a));
         });
         state = __assign({}, state, (_a = {}, _a[key] = cell.sample(), _a));
     };
-    for (var key in object) {
+    for (var key in stateDefinition) {
         _loop_1(key);
     }
     return state;
@@ -50,7 +50,7 @@ var SodiumReaction = /** @class */ (function (_super) {
     __extends(SodiumReaction, _super);
     function SodiumReaction(props) {
         var _this = _super.call(this, props) || this;
-        _this.state = bindState(_this, _this.props.state);
+        _this.state = bindState(_this, _this.props.stateDefinition);
         return _this;
     }
     SodiumReaction.prototype.render = function () {
@@ -59,7 +59,7 @@ var SodiumReaction = /** @class */ (function (_super) {
     };
     return SodiumReaction;
 }(React.Component));
-function sodiumReaction(props, state) {
-    return function (_props) { return (<SodiumReaction {...props} state={state}>{_props.children}</SodiumReaction>); };
+function sodiumReaction(props, stateDefinition) {
+    return function (_props) { return (<SodiumReaction {...props} stateDefinition={stateDefinition}>{_props.children}</SodiumReaction>); };
 }
 exports.sodiumReaction = sodiumReaction;
