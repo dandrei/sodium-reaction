@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Cell, CellLoop, Operational, Stream, StreamSink, Transaction, Unit} from "sodiumjs";
 
-class SExample1 extends React.Component {
+class SodiumExample1 extends React.Component {
 
     upClick: StreamSink<Unit>;
     dnClick: StreamSink<Unit>;
@@ -59,4 +59,39 @@ class SExample1 extends React.Component {
     }
 }
 
-export default SExample1;
+export default SodiumExample1;
+
+// Sodium does not glitch (produce inconsistent states) (RxJS does)
+
+// const ones: Cell<number> = valueLoop.map(c => c);
+// const hundreds: Cell<number> = ones.map(o => o * 100);
+// const sum = ones.lift(hundreds, (o, h) => o + h);
+// sum.listen(s => console.log(s));
+
+// If it needs to be packed up in an explicit transaction
+
+// Transaction.run(() => {
+// });
+
+// Verbose accumulator
+
+// const valueLoop: CellLoop<number> = new CellLoop<number>();
+// const update$: Stream<number> = delta$.snapshot(valueLoop, (d, v) => d + v)
+//     .filter(n => n >= 0)
+//     .map(n => n);
+// valueLoop.loop(update$.hold(0));
+// const value: Cell<string> = valueLoop.map(s => s.toString());
+
+// Create an "entangled" pair: a cell and a callback function to put values in the cell, via a stream
+// Decided not to go this way
+
+// export function pair<T>(initial: T): [(T) => void, Cell<T>] {
+//
+//     const stream: StreamSink<T> = new StreamSink<T>();
+//     const call: (T) => void = (value: T) => {
+//         stream.send(value);
+//     };
+//
+//     const cell: Cell<T> = stream.hold(initial);
+//     return [call, cell];
+// }
