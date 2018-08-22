@@ -1,12 +1,11 @@
 import * as React from "react";
 import {Fragment} from "react";
-
-import dataSource from './FRP2'
-
-const ProviderFRP = dataSource();
+import Provider from './Classic2'
+// import dataSource from './FRP2'
+// const Provider = dataSource();
 
 export default (props) => (
-    <ProviderFRP>
+    <Provider>
         {({changedA, changedB, state: {sum}}) => (
             <Fragment>
                 <div>
@@ -16,5 +15,5 @@ export default (props) => (
                 <span>{sum}</span>
             </Fragment>
         )}
-    </ProviderFRP>
+    </Provider>
 );

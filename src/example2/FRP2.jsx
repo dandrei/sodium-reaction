@@ -1,11 +1,11 @@
 exports.__esModule = true;
 var sodiumjs_1 = require("sodiumjs");
 var sodium_reaction_1 = require("../sodium-reaction");
+var validNumber = function (s) {
+    var res = parseInt(s, 10);
+    return isNaN(res) ? 0 : res;
+};
 function default_1() {
-    var validNumber = function (s) {
-        var res = parseInt(s, 10);
-        return isNaN(res) ? 0 : res;
-    };
     var a$ = new sodiumjs_1.StreamSink();
     var b$ = new sodiumjs_1.StreamSink();
     var a = a$.hold("0").map(validNumber);

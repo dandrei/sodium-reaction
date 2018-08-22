@@ -54,17 +54,61 @@ There's hardly any boilerplate involved. You simply:
 - define the event callbacks and state in a TypeScript function that configures and returns a headless component.
 - include the headless component in the UI component (the consumer). The headless component provides the consumer with the event callbacks and the state.
 
-The first example is written both in pure React and using Sodium, which allows you to compare the two ways of doing things (see `./src/example1/Classic.jsx` and `./src/example1/FRP1.tsx`).
+## Code sample #1
+The first example consists of a `+` and a `-` button which increment and decrement a value, respectively.
 
-## Code sample
-I'm adding the second example here because it has multiple interacting elements. There are two input boxes where you type numbers. The sum between these numbers is displayed below. I stripped the includes so as not to take too much space.
+### Consumer
+```
+export default (props) => (
+    <Provider>
+        {({up, dn, state: {value}}) => (
+            <Fragment>
+                <div>
+                    <button onClick={up}>+</button>
+                    <button onClick={dn}>-</button>
+                </div>
+                <span>{value}</span>
+            </Fragment>
+        )}
+    </Provider>
+);
+```
 
-#### `RExample2.jsx` (consumer)
+#### Provider
+```
+export default function () {
+    const value$ = new StreamSink<number>();
+    const value: Cell<number> = value$.accum(0, (a, v) => a + v);
+
+    return sodiumReaction({
+            up: () => value$.send(1),
+            dn: () => value$.send(-1)
+        },
+        {value}
+    );
+};
+```
+The nice thing about declarative code is that it reads almost exactly as you would describe it in words. It's not hard to get used to the FRP-specific functions (like `accum`, `hold`, `send`, `lift`, etc.).
+1. We define a stream sink (a stream you can push values into), `value$`, which will handle incoming events.
+2. We define a cell that accumulates values from the stream. Starting value is `0`.
+3. We generate a headless component with two event handlers (`up` and `dn` which push `1` and `-1` respectively into the `value$` stream), and a state definition which depends on the `value` cell.
+
+Notice two things:
+- Cells and streams are generic classes. You define explicitly what data types the objects contain. With a smart IDE, certain categories of bugs are taken off the table.
+- There are no moving parts. The cells and streams are defined "in place". Data flows between them, but you're not concerned with how that happens. You just set up the pipes and that's it.
+
+With jQuery, you had to manually trigger both the data changes, and the UI changes.
+With React, the UI changes are abstracted away, you only need to manually handle state changes (via `setState`).
+With React & FRP, state changes are also abstracted away.
+
+## Code sample #2
+The second example is slightly more complicated. There are two input boxes where you type numbers. The sum between these numbers is displayed below. I stripped the includes so as not to take too much space.
+
+#### Consumer
 Notice that the component has no logic, and it just binds events and displays state.
 ```
-const ProviderFRP = dataSource();
 export default (props) => (
-    <ProviderFRP>
+    <Provider>
         {({changedA, changedB, state: {sum}}) => (
             <Fragment>
                 <div>
@@ -74,11 +118,11 @@ export default (props) => (
                 <span>{sum}</span>
             </Fragment>
         )}
-    </ProviderFRP>
+    </Provider>
 );
 ```
 
-#### `FRP2.tsx` (state and event definition)
+#### Provider
 ```
 export default function () {
 
@@ -96,22 +140,19 @@ export default function () {
     const sum: Cell<number> = a.lift(b, (a_, b_) => a_ + b_);
 
     return sodiumReaction({
-        changedA: (e) => a$.send(e.target.value),
-        changedB: (e) => b$.send(e.target.value)
-    }, {sum});
+            changedA: (e) => a$.send(e.target.value),
+            changedB: (e) => b$.send(e.target.value)
+        },
+        {sum}
+    );
 };
 ```
-The nice thing about declarative code is that it reads almost exactly as you would describe it in words. It's not hard to get used to the FRP-specific functions (like `hold`, `send`, `lift`, etc.).
+What is going on here?
 1. We define a function that converts an integer to a string, returning `0` if the string isn't a number.
-2. We define two stream sinks (streams you can push values into), `a$` and `b$`.
-Why two? There are two text fields in the UI, so there are two streams of data.
+2. We define two stream sinks, `a$` and `b$`. Why two? There are two independent text fields in the UI, so there are two streams of data.
 3. Then we define two cells, `a` and `b` which hold the numbers that result when the above streams fire.
 4. We define a third cell, `sum`, by defining it in relation to `a` and `b`.
 5. We generate the headless component using the event callbacks (which send values to streams), and the state definition.
-
-Notice two things:
-- Cells and streams are generics. You define explicitly what data types they contain, and use `map` to create new cells and streams of another type.
-- There are no moving parts. The cells and streams are defined "in place". Data flows between them, but you're not concerned with how that happens. You just set up the pipes and that's it.
 
 ## Development
 

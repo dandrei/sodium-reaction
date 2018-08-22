@@ -7,13 +7,12 @@ export default function () {
     const value$ = new StreamSink<number>();
     const value: Cell<number> = value$.accum(0, (a, v) => a + v);
 
-    const props = {
-        up: () => value$.send(1),
-        dn: () => value$.send(-1)
-    };
-    const state = {value};
-
-    return sodiumReaction(props, state);
+    return sodiumReaction({
+            up: () => value$.send(1),
+            dn: () => value$.send(-1)
+        },
+        {value}
+    );
 };
 
 

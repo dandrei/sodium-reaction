@@ -3,14 +3,12 @@ import {Cell, StreamSink, Unit} from "sodiumjs";
 
 import {sodiumReaction} from '../sodium-reaction';
 
+const validNumber = s => {
+    const res = parseInt(s, 10);
+    return isNaN(res) ? 0 : res;
+};
 
 export default function () {
-
-    const validNumber = s => {
-        const res = parseInt(s, 10);
-        return isNaN(res) ? 0 : res;
-    };
-
     const a$ = new StreamSink<string>();
     const b$ = new StreamSink<string>();
 
@@ -20,9 +18,11 @@ export default function () {
     const sum: Cell<number> = a.lift(b, (a_, b_) => a_ + b_);
 
     return sodiumReaction({
-        changedA: (e) => a$.send(e.target.value),
-        changedB: (e) => b$.send(e.target.value)
-    }, {sum});
+            changedA: (e) => a$.send(e.target.value),
+            changedB: (e) => b$.send(e.target.value)
+        },
+        {sum}
+    );
 };
 
 

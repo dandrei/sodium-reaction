@@ -1,12 +1,12 @@
 import * as React from 'react';
 import {Fragment} from 'react';
 import dataSource from './FRP1'
-import ProviderClassic from './Classic'
+// import Provider from './Classic1'
 
-const ProviderFRP = dataSource();
+const Provider = dataSource();
 
 export default (props) => (
-    <ProviderFRP>
+    <Provider>
         {({up, dn, state: {value}}) => (
             <Fragment>
                 <div>
@@ -16,6 +16,6 @@ export default (props) => (
                 <span>{value}</span>
             </Fragment>
         )}
-    </ProviderFRP>
+    </Provider>
 );
 
