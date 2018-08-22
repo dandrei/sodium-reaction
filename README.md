@@ -59,7 +59,7 @@ The first example is written both in pure React and using Sodium, which allows y
 ## Code sample
 I'm adding the second example here because it has multiple interacting elements. There are two input boxes where you type numbers. The sum between these numbers is displayed below. I stripped the includes so as not to take too much space.
 
-##### `RExample2.jsx` (consumer)
+#### `RExample2.jsx` (consumer)
 Notice that the component has no logic, and it just binds events and displays state.
 ```
 const ProviderFRP = dataSource();
@@ -77,18 +77,8 @@ export default (props) => (
     </ProviderFRP>
 );
 ```
-##### `FRP2.tsx` (state and event definition)
-The nice thing about declarative code is that it reads almost exactly as you would describe it in words. It's not hard to get used to the FRP-specific functions (like `hold`, `send`, `lift`, etc.).
-1. We define a function that converts an integer to a string, returning `0` if the string isn't a number.
-2. We define two stream sinks (streams you can push values into), `a$` and `b$`.
-Why two? There are two text fields in the UI, so there are two streams of data.
-3. Then we define two cells, `a` and `b` which hold the numbers that result when the above streams fire.
-4. We define a third cell, `sum`, by defining it in relation to `a` and `b`.
-5. We generate the headless component using the event callbacks (which send values to streams), and the state definition.
 
-Notice two things:
-- Cells and streams are generics. You define explicitly what data types they contain, and use `map` to create new cells and streams of another type.
-- There are no moving parts. The cells and streams are defined "in place". Data flows between them, but you're not concerned with how that happens. You just set up the pipes and that's it.
+#### `FRP2.tsx` (state and event definition)
 ```
 export default function () {
 
@@ -111,6 +101,18 @@ export default function () {
     }, {sum});
 };
 ```
+The nice thing about declarative code is that it reads almost exactly as you would describe it in words. It's not hard to get used to the FRP-specific functions (like `hold`, `send`, `lift`, etc.).
+1. We define a function that converts an integer to a string, returning `0` if the string isn't a number.
+2. We define two stream sinks (streams you can push values into), `a$` and `b$`.
+Why two? There are two text fields in the UI, so there are two streams of data.
+3. Then we define two cells, `a` and `b` which hold the numbers that result when the above streams fire.
+4. We define a third cell, `sum`, by defining it in relation to `a` and `b`.
+5. We generate the headless component using the event callbacks (which send values to streams), and the state definition.
+
+Notice two things:
+- Cells and streams are generics. You define explicitly what data types they contain, and use `map` to create new cells and streams of another type.
+- There are no moving parts. The cells and streams are defined "in place". Data flows between them, but you're not concerned with how that happens. You just set up the pipes and that's it.
+
 ## Development
 
 The project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). All work done in TypeScript was transpiled automatically to JS from the IDE. You'll want to look at the TS source, not at the generated JS code.
