@@ -99,7 +99,9 @@ Notice two things:
 - There are no moving parts. The cells and streams are defined "in place". Data flows between them, but you're not concerned with how that happens. You just set up the pipes and that's it.
 
 With jQuery, you had to manually trigger both the data changes, and the UI changes.
+
 With React, the UI changes are abstracted away, you only need to manually handle state changes (via `setState`).
+
 With React & FRP, state changes are also abstracted away.
 
 ## Code sample #2
