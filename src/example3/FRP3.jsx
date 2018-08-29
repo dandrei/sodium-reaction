@@ -27,8 +27,8 @@ function default_1() {
     var sum = inputs.map(function (arr) { return arr.reduce(function (v, i) { return v + i.value; }, 0); });
     var count = inputs.map(function (s) { return s.length; });
     return sodium_reaction_1.sodiumReaction({
-        up: function () { return i$.send(1); },
-        dn: function () { return d$.send(-1); },
+        up: function (_) { return i$.send(1); },
+        dn: function (_) { return d$.send(-1); },
         change: function (k) { return function (e) { return change$.send({ key: k, value: validNumber(e.target.value) }); }; },
         remove: function (k) { return function (_) { return remove$.send(k); }; }
     }, { count: count, sum: sum, inputs: inputs });

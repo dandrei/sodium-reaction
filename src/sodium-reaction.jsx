@@ -58,7 +58,7 @@ var SodiumReaction = /** @class */ (function (_super) {
         return this.props.children(__assign({}, this.props, { state: this.state }));
     };
     return SodiumReaction;
-}(React.Component));
+}(React.PureComponent));
 function sodiumReaction(props, stateDefinition) {
     return function (_props) { return (<SodiumReaction {...props} stateDefinition={stateDefinition}>{_props.children}</SodiumReaction>); };
 }

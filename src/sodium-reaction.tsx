@@ -19,7 +19,7 @@ function bindValue<T>(cell: Cell<T>, call: (T) => void): void {
     });
 }
 
-class SodiumReaction extends React.Component<any, any> {
+class SodiumReaction extends React.PureComponent<any, any> {
     state;
 
     constructor(props) {

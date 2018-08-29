@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
-import RExample1 from './example1/RExample1';
-import RExample2 from './example2/RExample2';
-import RExample3 from './example3/RExample3';
+import Example1 from './example1/Example1';
+import Example2 from './example2/Example2';
+import Example3 from './example3/Example3';
 
 class App extends Component {
 
@@ -17,17 +17,17 @@ class App extends Component {
                 <div className="App-intro">
                     <fieldset>
                         <legend>Example 1</legend>
-                        <RExample1/>
+                        <Example1/>
                     </fieldset>
 
                     <fieldset>
                         <legend>Example 2</legend>
-                        <RExample2/>
+                        <Example2/>
                     </fieldset>
 
                     <fieldset>
                         <legend>Example 3</legend>
-                        <RExample3/>
+                        <Example3/>
                     </fieldset>
                 </div>
             </div>

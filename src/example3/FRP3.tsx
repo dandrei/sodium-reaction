@@ -38,8 +38,8 @@ export default function () {
     const count: Cell<number> = inputs.map(s => s.length);
 
     return sodiumReaction({
-            up: () => i$.send(1),
-            dn: () => d$.send(-1),
+            up: _ => i$.send(1),
+            dn: _ => d$.send(-1),
             change: k => e => change$.send({key: k, value: validNumber(e.target.value)}),
             remove: k => _ => remove$.send(k),
         },

@@ -1,7 +1,7 @@
 import * as React from "react";
 
 
-export default class Classic1 extends React.Component {
+export default class Classic1 extends React.PureComponent {
     state = {value: 0};
 
     add = delta => () => this.setState(prevState => ({value: prevState.value + delta}));

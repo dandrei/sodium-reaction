@@ -9,7 +9,7 @@ function getSum(total, num) {
     return total + num;
 }
 
-export default class Classic2 extends React.Component {
+export default class Classic2 extends React.PureComponent {
     state = {sum: 0};
 
     values = {a: 0, b: 0};

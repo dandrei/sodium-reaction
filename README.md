@@ -159,6 +159,18 @@ What is going on here?
 5. We generate the headless component using the event callbacks (which send values to streams), and the state definition.
 
 ## Code sample #3
+
+The third example is a personal project and it diverges from the ones proposed in the book. I wanted to combine the first two examples into a single interface which allows the user to do the following:
+- Increment / decrement a value.
+    - Incrementing the value adds an input box to the interface
+    - Decrementing this value removes the last input box added
+- Type integers in the input boxes
+- Typing into any of the input boxes computes the sum of all the numbers in all the input boxes
+- Remove specific input boxes on demand (each box has a "remove" button)
+- The sum is recomputed on every keystroke and when a box is removed
+
+There are several complexities here
+
 ### Consumer
 ```
 export default (props) => (
