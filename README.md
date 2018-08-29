@@ -6,7 +6,7 @@ I adapted the first two examples. All the FRP code was executed inside `componen
 
 After the initial commit, I slept on it for a few months while working on other projects, and decided there's a better way. Inspired by Merrick Christensen's [Headless User Interface Components](https://twitter.com/iammerrick/status/1011280034626134016), I decided to separate the UI from the data, and to create a standardized way for React to talk to Sodium. I also simplified the code in order to demonstrate the advantages of using Sodium with React.
 
-The UI component now simply consumes the state of a headless component that is bound to the FRP code. This allows the state to be built in an declarative manner.
+The UI component now simply consumes the state of a headless component that is bound to the FRP code. This allows the state to be built in an declarative manner. The third example is no longer related to graforlock's samples, and it combines the features of the first two.
 
 But wait, isn't React already declarative? React is declarative when it comes to mapping the state to the DOM. But you're still in imperative land when it comes to actually building the state. FRP also makes building the state declarative.
 
@@ -158,6 +158,74 @@ What is going on here?
 4. We define a third cell, `sum`, by defining it in relation to `a` and `b`.
 5. We generate the headless component using the event callbacks (which send values to streams), and the state definition.
 
+## Code sample #3
+### Consumer
+```
+export default (props) => (
+    <Provider>
+        {({up, dn, change, remove, state: {count, inputs, sum}}) => (
+            <Fragment>
+                <div>
+                    <button onClick={up}>+</button>
+                    <button onClick={dn}>-</button>
+                </div>
+                <div>
+                    Inputs: {count} Sum: {sum}
+                </div>
+                <Fragment>
+                    {inputs.map(({key, value}) => <div>
+                        <input value={value} key={key} onChange={change(key)}/>
+                        <button onClick={remove(key)}>x</button>
+                    </div>)}
+                </Fragment>
+            </Fragment>
+        )}
+    </Provider>
+);
+```
+
+### Provider
+```
+type Input = { key: number, value: number };
+
+export default function () {
+    let id = 0;
+    const newKey = () => id++;
+
+    // +/-
+    const i$ = new StreamSink<number>();
+    const d$ = new StreamSink<number>();
+
+    // triggered from UI
+    const change$ = new StreamSink<Input>();
+    const remove$ = new StreamSink<number>();
+
+    // function streams
+    const inc$: Stream<Function> = i$.map(_ => s => [...s, {key: newKey(), value: 0}]);
+    const dec$: Stream<Function> = d$.map(dec => s => s.slice(0, s.length + dec));
+    const chg$: Stream<Function> = change$.map(chg => s => s.map(t => t.key === chg.key ? chg : t));
+    const rmv$: Stream<Function> = remove$.map(key => s => s.filter(i => i.key !== key));
+
+    const inputs: Cell<Array<Input>> = inc$
+        .orElse(dec$)
+        .orElse(chg$)
+        .orElse(rmv$)
+        .accum([], (f, s) => f(s));
+
+    const sum: Cell<number> = inputs.map(arr => arr.reduce((v, i) => v + i.value, 0));
+    const count: Cell<number> = inputs.map(s => s.length);
+
+    return sodiumReaction({
+            up: () => i$.send(1),
+            dn: () => d$.send(-1),
+            change: k => e => change$.send({key: k, value: validNumber(e.target.value)}),
+            remove: k => _ => remove$.send(k),
+        },
+        {count, sum, inputs}
+    );
+};
+```
+
 ## Development
 
 The project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). All work done in TypeScript was transpiled automatically to JS from the IDE. You'll want to look at the TS source, not at the generated JS code.
@@ -173,3 +241,5 @@ Only the first 2 examples are available so far, but these are useful in getting 
 ## Background
 - [Functional Reactive Programming](https://www.manning.com/books/functional-reactive-programming) (the book, published by Manning)
 - [sodium-typescript](https://github.com/SodiumFRP/sodium-typescript) (the TypeScript library written by the authors)
+
+Markdown edited on [dillinger.io](https://dillinger.io)

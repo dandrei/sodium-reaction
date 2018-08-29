@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "noImplicitUseStrict": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "lib": ["es2017", "dom"] //https://stackoverflow.com/questions/42966362/how-to-use-object-values-with-typescript/42967397
   }
 }
