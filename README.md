@@ -242,4 +242,6 @@ Only the first 2 examples are available so far, but these are useful in getting 
 - [Functional Reactive Programming](https://www.manning.com/books/functional-reactive-programming) (the book, published by Manning)
 - [sodium-typescript](https://github.com/SodiumFRP/sodium-typescript) (the TypeScript library written by the authors)
 
-Markdown edited on [dillinger.io](https://dillinger.io)
+## Other
+- Markdown edited on [dillinger.io](https://dillinger.io).
+- This project discussed on [sodium.nz](http://sodium.nz/t/sodiumfrp-react-sodium-reaction/344).
