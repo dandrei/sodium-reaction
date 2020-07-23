@@ -1,14 +1,20 @@
 import * as React from 'react';
-import {Cell, StreamSink, Unit} from "sodiumjs";
+import {Cell, StreamSink} from "sodiumjs";
 
-import {sodiumReaction} from '../sodium-reaction';
+import {ChangeEvent} from "react";
+import {Renderer, SodiumReaction} from "../lib/SodiumReaction";
 
-const validNumber = s => {
+const validNumber = (s: string) => {
     const res = parseInt(s, 10);
     return isNaN(res) ? 0 : res;
 };
 
-export default function () {
+export function FRP2({render}: { render: Renderer<typeof actions, typeof initState> }) {
+
+    const initState = {
+        sum: 0
+    }
+
     const a$ = new StreamSink<string>();
     const b$ = new StreamSink<string>();
 
@@ -17,13 +23,18 @@ export default function () {
 
     const sum: Cell<number> = a.lift(b, (a_, b_) => a_ + b_);
 
-    return sodiumReaction({
-            changedA: (e) => a$.send(e.target.value),
-            changedB: (e) => b$.send(e.target.value)
-        },
-        {sum}
-    );
-};
+    const actions = {
+        changedA: (e: ChangeEvent<HTMLInputElement>) => a$.send(e.target.value),
+        changedB: (e: ChangeEvent<HTMLInputElement>) => b$.send(e.target.value)
+    };
+
+    return <SodiumReaction<typeof actions, typeof initState>
+        render={render}
+        actions={actions}
+        initState={initState}
+        sodiumState={{sum}}
+    />
+}
 
 
 

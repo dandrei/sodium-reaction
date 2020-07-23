@@ -1,7 +1,25 @@
 {
   "compilerOptions": {
-    "noImplicitUseStrict": true,
-    "jsx": "preserve",
-    "lib": ["es2017", "dom"] //https://stackoverflow.com/questions/42966362/how-to-use-object-values-with-typescript/42967397
-  }
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react"
+  },
+  "include": [
+    "src"
+  ]
 }

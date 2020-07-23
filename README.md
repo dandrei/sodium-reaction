@@ -1,20 +1,8 @@
-## Motivation
-
-Originally, this project was aimed at simply getting graforlock's [sodium-typescript-examples](https://github.com/graforlock/sodium-typescript-examples) to work React, as I was reading the FRP ([Functional Reactive Programming](https://www.manning.com/books/functional-reactive-programming)) book at the time.
-
-I adapted the first two examples. All the FRP code was executed inside `componentDidMount`. It worked, but mixing React and Sodium code inside a simple component looked clumsy and it wasn't at all clear why anyone should go to the trouble of using them together.
-
-After the initial commit, I slept on it for a few months while working on other projects, and decided there's a better way. Inspired by Merrick Christensen's [Headless User Interface Components](https://twitter.com/iammerrick/status/1011280034626134016), I decided to separate the UI from the data, and to create a standardized way for React to talk to Sodium. I also simplified the code in order to demonstrate the advantages of using Sodium with React.
-
-The UI component now simply consumes the state of a headless component that is bound to the FRP code. This allows the state to be built in an declarative manner. The third example is no longer related to graforlock's samples, and it combines the features of the first two.
-
-But wait, isn't React already declarative? React is declarative when it comes to mapping the state to the DOM. But you're still in imperative land when it comes to actually building the state. FRP also makes building the state declarative.
-
 ## FRP
 
 If you are't familiar with FRP, the [textbook definition](https://manning-content.s3.amazonaws.com/download/b/82db892-a770-433c-b32a-2ec56b6f49da/SC-01.pdf) is that:
 
-```FRP allows functional programming to become a meta-language for event-based logic```
+    FRP allows functional programming to become a meta-language for event-based logic
 
 If that sounds confusing, just think about an Excel spreadsheet. You simply declare the relationship between the cells, and never worry about what happens behind the scenes.
 
@@ -34,226 +22,59 @@ The DOM reacts to state (thanks to React), and state reacts to events (thanks to
 
 I called this project `sodium-reaction` because it brings together the two libraries: SodiumFRP and React.
 
-The core is made up of a headless component and three helper functions, of which:
+There's hardly any boilerplate involved. You simply do the following:
 
-- Only a single function is actually exported and used outside.
-- The component is used internally to hold state (using `setState`). Changes to its state will be propagated to the consumer (the UI component).
-
-The exported function, `sodiumReaction(props, state)`, takes in two parameters:
-
-- a `props` object (containing the event callbacks).
-- a `state` definition object containing Sodium cells.
-
-The `state` definition object isn't the actual state. Behind the scenes, changes to the cells will execute callbacks that push the actual values into the headless component's state using `setState`.
-
-The state definition that you send to `sodiumReaction` has the same structure as the actual state that the UI component receives.
-
-There's hardly any boilerplate involved. You simply:
-
-- define the UI in one component. The UI is now little more than a template, it can even be a functional component.
-- define the event callbacks and state in a TypeScript function that configures and returns a headless component.
-- include the headless component in the UI component (the consumer). The headless component provides the consumer with the event callbacks and the state.
+- define the UI in one component. The UI is now little more than a template.
+- define the event callbacks and state in another component.
 
 ## Code sample #1
 The first example consists of a `+` and a `-` button which increment and decrement a value, respectively.
 
-I stripped the includes so as not to take too much space.
-
-### Consumer
-```
-export default (props) => (
-    <Provider>
-        {({up, dn, state: {value}}) => (
-            <Fragment>
-                <div>
-                    <button onClick={up}>+</button>
-                    <button onClick={dn}>-</button>
-                </div>
-                <span>{value}</span>
-            </Fragment>
-        )}
-    </Provider>
-);
-```
-Notice that the component has no logic, and it just binds events and displays state.
-
-### Provider
-```
-export default function () {
-    const value$ = new StreamSink<number>();
-    const value: Cell<number> = value$.accum(0, (a, v) => a + v);
-
-    return sodiumReaction({
-            up: () => value$.send(1),
-            dn: () => value$.send(-1)
-        },
-        {value}
-    );
-};
-```
 The nice thing about declarative code is that it reads almost exactly as you would describe it in words. It's not hard to get used to the FRP-specific functions (like `accum`, `hold`, `send`, `lift`, etc.).
 1. We define a stream sink (a stream you can push values into), `value$`, which will handle incoming events.
 2. We define a cell that accumulates values from the stream. Starting value is `0`.
 3. We generate a headless component with two event handlers (`up` and `dn` which push `1` and `-1` respectively into the `value$` stream), and a state definition which depends on the `value` cell.
 
 Notice two things:
-- Cells and streams are generic classes. You define explicitly what data types the objects contain. With a smart IDE, certain categories of bugs are taken off the table.
-- There are no moving parts. The cells and streams are defined "in place". Data flows between them, but you're not concerned with how that happens. You just set up the pipes and that's it.
+- Cells and streams are generic classes. You define explicitly what data types the objects contain. Type checking ensures that certain categories of bugs get taken off the table.
+- There are no moving parts. The cells and streams get defined "in place". Data flows between them, but you're not concerned with how that happens. You just set up the pipes and that's it.
 
-With jQuery, you had to manually trigger both the data changes, and the UI changes.
+With React, the UI changes get abstracted away, you only need to manually handle state changes (via `setState`).
 
-With React, the UI changes are abstracted away, you only need to manually handle state changes (via `setState`).
-
-With React & FRP, state changes are also abstracted away.
+With React & FRP, state changes also get abstracted away.
 
 ## Code sample #2
-The second example is slightly more complicated. There are two input boxes where you type numbers. The sum between these numbers is displayed under the boxes.
+The second example is slightly more complicated. There are two input boxes where you type numbers. The sum between these numbers gets displayed under the boxes.
 
-### Consumer
-```
-export default (props) => (
-    <Provider>
-        {({changedA, changedB, state: {sum}}) => (
-            <Fragment>
-                <div>
-                    <input onChange={changedA}/>
-                    <input onChange={changedB}/>
-                </div>
-                <span>{sum}</span>
-            </Fragment>
-        )}
-    </Provider>
-);
-```
-
-### Provider
-```
-export default function () {
-
-    const validNumber = s => {
-        const res = parseInt(s, 10);
-        return isNaN(res) ? 0 : res;
-    };
-
-    const a$ = new StreamSink<string>();
-    const b$ = new StreamSink<string>();
-
-    const a: Cell<number> = a$.hold("0").map(validNumber);
-    const b: Cell<number> = b$.hold("0").map(validNumber);
-
-    const sum: Cell<number> = a.lift(b, (a_, b_) => a_ + b_);
-
-    return sodiumReaction({
-            changedA: (e) => a$.send(e.target.value),
-            changedB: (e) => b$.send(e.target.value)
-        },
-        {sum}
-    );
-};
-```
-What is going on here?
 1. We define a function that converts an integer to a string, returning `0` if the string isn't a number.
-2. We define two stream sinks, `a$` and `b$`. Why two? There are two independent text fields in the UI, so there are two streams of data.
+2. We define two `StreamSink<string>` objects, `a$` and `b$`. Why two? There are two independent text fields in the UI, so there are two streams of data.
 3. Then we define two cells, `a` and `b` which hold the numbers that result when the above streams fire.
-4. We define a third cell, `sum`, by defining it in relation to `a` and `b`.
-5. We generate the headless component using the event callbacks (which send values to streams), and the state definition.
+4. We define a third cell, `sum`. Its value gets recomputed when either `a` or `b` change.
 
 ## Code sample #3
 
-The third example is a personal project and it diverges from the ones proposed in the book. I wanted to combine the first two examples into a single interface which allows the user to do the following:
+The third example is a personal project, and it diverges from the ones proposed in the book. I wanted to combine the first two examples into a single interface which allows the user to do the following:
 - Increment / decrement a value.
     - Incrementing the value adds an input box to the interface
     - Decrementing this value removes the last input box added
 - Type integers in the input boxes
 - Typing into any of the input boxes computes the sum of all the numbers in all the input boxes
 - Remove specific input boxes on demand (each box has a "remove" button)
-- The sum is recomputed on every keystroke and when a box is removed
-
-There are several complexities here
-
-### Consumer
-```
-export default (props) => (
-    <Provider>
-        {({up, dn, change, remove, state: {count, inputs, sum}}) => (
-            <Fragment>
-                <div>
-                    <button onClick={up}>+</button>
-                    <button onClick={dn}>-</button>
-                </div>
-                <div>
-                    Inputs: {count} Sum: {sum}
-                </div>
-                <Fragment>
-                    {inputs.map(({key, value}) => <div>
-                        <input value={value} key={key} onChange={change(key)}/>
-                        <button onClick={remove(key)}>x</button>
-                    </div>)}
-                </Fragment>
-            </Fragment>
-        )}
-    </Provider>
-);
-```
-
-### Provider
-```
-type Input = { key: number, value: number };
-
-export default function () {
-    let id = 0;
-    const newKey = () => id++;
-
-    // +/-
-    const i$ = new StreamSink<number>();
-    const d$ = new StreamSink<number>();
-
-    // triggered from UI
-    const change$ = new StreamSink<Input>();
-    const remove$ = new StreamSink<number>();
-
-    // function streams
-    const inc$: Stream<Function> = i$.map(_ => s => [...s, {key: newKey(), value: 0}]);
-    const dec$: Stream<Function> = d$.map(dec => s => s.slice(0, s.length + dec));
-    const chg$: Stream<Function> = change$.map(chg => s => s.map(t => t.key === chg.key ? chg : t));
-    const rmv$: Stream<Function> = remove$.map(key => s => s.filter(i => i.key !== key));
-
-    const inputs: Cell<Array<Input>> = inc$
-        .orElse(dec$)
-        .orElse(chg$)
-        .orElse(rmv$)
-        .accum([], (f, s) => f(s));
-
-    const sum: Cell<number> = inputs.map(arr => arr.reduce((v, i) => v + i.value, 0));
-    const count: Cell<number> = inputs.map(s => s.length);
-
-    return sodiumReaction({
-            up: () => i$.send(1),
-            dn: () => d$.send(-1),
-            change: k => e => change$.send({key: k, value: validNumber(e.target.value)}),
-            remove: k => _ => remove$.send(k),
-        },
-        {count, sum, inputs}
-    );
-};
-```
+- The sum gets recomputed on every keystroke and when you remove a box
 
 ## Development
 
-The project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). All work done in TypeScript was transpiled automatically to JS from the IDE. You'll want to look at the TS source, not at the generated JS code.
-
-No automated transpilation support is included in the initial release, but if you use an IDE that does this out of the box (like WebStorm), you should be able to play with the examples directly.
+The project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the TypeScript setup.
 
 To install: clone the repo then run either `npm install` or `yarn install`.
 
 To run: all the standard CRA scripts work as expected. I just use `yarn start`.
 
-Only the first 2 examples are available so far, but these are useful in getting a feel of what FRP is all about. I plan to add the third example as well, but that will require a severe departure from how things are done in the original repo.
+Only the first 2 examples are available so far, but these are useful in getting a feel of what FRP is all about.
 
 ## Background
 - [Functional Reactive Programming](https://www.manning.com/books/functional-reactive-programming) (the book, published by Manning)
 - [sodium-typescript](https://github.com/SodiumFRP/sodium-typescript) (the TypeScript library written by the authors)
 
 ## Other
-- Markdown edited on [dillinger.io](https://dillinger.io).
 - This project discussed on [sodium.nz](http://sodium.nz/t/sodiumfrp-react-sodium-reaction/344).
