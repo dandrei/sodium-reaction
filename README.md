@@ -1,6 +1,6 @@
 ## FRP
 
-If you are't familiar with FRP, the [textbook definition](https://manning-content.s3.amazonaws.com/download/b/82db892-a770-433c-b32a-2ec56b6f49da/SC-01.pdf) is that:
+If you aren't familiar with FRP, the [textbook definition](https://manning-content.s3.amazonaws.com/download/b/82db892-a770-433c-b32a-2ec56b6f49da/SC-01.pdf) is that:
 
     FRP allows functional programming to become a meta-language for event-based logic
 
@@ -33,7 +33,7 @@ The first example consists of a `+` and a `-` button which increment and decreme
 The nice thing about declarative code is that it reads almost exactly as you would describe it in words. It's not hard to get used to the FRP-specific functions (like `accum`, `hold`, `send`, `lift`, etc.).
 1. We define a stream sink (a stream you can push values into), `value$`, which will handle incoming events.
 2. We define a cell that accumulates values from the stream. Starting value is `0`.
-3. We generate a headless component with two event handlers (`up` and `dn` which push `1` and `-1` respectively into the `value$` stream), and a state definition which depends on the `value` cell.
+3. We generate a headless component with two event-handlers (`up` and `dn` which push `1` and `-1` respectively into the `value$` stream), and a state definition which depends on the `value` cell.
 
 Notice two things:
 - Cells and streams are generic classes. You define explicitly what data types the objects contain. Type checking ensures that certain categories of bugs get taken off the table.
@@ -64,7 +64,7 @@ The third example is a personal project, and it diverges from the ones proposed 
 
 ## Development
 
-The project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the TypeScript setup.
+I set up the project with [Create React App](https://github.com/facebook/create-react-app), using the TypeScript setup.
 
 To install: clone the repo then run either `npm install` or `yarn install`.
 
